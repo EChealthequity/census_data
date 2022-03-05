@@ -8,6 +8,6 @@ This repository holds on applicable scripts that cleans, wrangles, analyses, and
 
 # **Directory**
 
--   <h2>[**Data**](data)</h2>  *Folder where the raw Census data files are kept.*
+-   <b><h2>[Data](data)</h2></b>  <i>Folder where the raw Census data files are kept.</i>
 
--   <h2>[**Scripts**](scripts)</h2>  *Folder where the scripts (R Programs) are stored. These scripts process, analyze, and exports data.*
+-   <b><h2>[Scripts](scripts)</h2></b>  <i>Folder where the scripts (R Programs) are stored. These scripts process, analyze, and exports data.</i>
