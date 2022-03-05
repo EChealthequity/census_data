@@ -1,5 +1,5 @@
 ---
-title: "<h1><b>Census Data</b></h1>"
+title: "<h1>**Census Data**</h1>"
 output:
   rmarkdown::html_document:
     theme: cosmo
