@@ -6,7 +6,7 @@ library(here) #For easier movement through the directory#
 
 # Data Load-in====
 #pulling in file paths of loose csvs===
-file_directories <- list.files(here("data/buffalo/acs/race"), full.names = TRUE)
+file_directories <- list.files(here("data/buffalo/acs/race/raw"), full.names = TRUE)
 
 #storing all files into a list===
 Buffalo_acs_race_data <- lapply(file_directories, function(x) read_csv(x, show_col_types = FALSE))
@@ -16,7 +16,7 @@ Buffalo_acs_race_data <- lapply(file_directories, function(x) read_csv(x, show_c
 file_count <- length(Buffalo_acs_race_data)
 
 #grabbing readable file names==
-file_names <- list.files(here("data/buffalo/acs/race"))
+file_names <- list.files(here("data/buffalo/acs/race/raw"))
 
 #total count of all variables in each dataset==
 var_counts <- sapply(Buffalo_acs_race_data, function(x) length(names(x)), simplify = TRUE)
@@ -78,6 +78,19 @@ Buffalo_acs_race_data_totals <- bind_rows(Buffalo_acs_race_data) %>%
   filter(race == "Total") %>%
   select(-c(race,overall_total))
 
-# figure out placing into buckets and saving back into directory locally
+# Pulling in a custom function to place data into a bucket and up to the cloud====
+cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
 
- 
+# Uploading the ACS Race data for Buffalo====
+cloud_saver("Buffalo ACS Race Data 2010 to 2019", Buffalo_acs_race_data_final)
+
+# Uploading the ACS Race data Totals with proper MOEs for JUST overall totals - no race strats====
+cloud_saver("Buffalo ACS Race Total w MOE 2010 to 2019", Buffalo_acs_race_data_totals)
+
+# Saving the clean data locally====
+# Cleaned race ACS (2010-2019)==
+write_csv(Buffalo_acs_race_data_final, "data/buffalo/acs/race/clean/buffalo_acs_race_2010_2019.csv")
+
+# Cleaned overall totals w/ MOE - no strats==
+write_csv(Buffalo_acs_race_data_totals, "data/buffalo/acs/race/clean/buffalo_acs_race_total_moe.csv")
+
