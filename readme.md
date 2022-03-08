@@ -3,7 +3,7 @@
 
 # **About**
 
-This repository holds on applicable scripts that cleans, wrangles, analyses, and exports census data for Erie County, NY.
+This repository contains applicable scripts that cleans, wrangles, analyses, and exports census data for Erie County, NY. All data in this repository is publicly available and found through the [United States Census Bureau Data Website.](https://data.census.gov/cedsci/)
 
 # **Directory**
 
