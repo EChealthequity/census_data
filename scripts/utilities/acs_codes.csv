@@ -1,0 +1,45 @@
+﻿code,category
+B02001,race
+B01001,sex by age
+B01001A,sex by age (white alone)
+B01001B,sex by age (black alone)
+B01001C,sex by age (american indian alaskan alone)
+B01001D,sex by age (asian alone)
+B01001E,sex by age (native hawaiian pacific alone)
+B01001F,sex by age (some other alone)
+S2301,employment status
+B08105,means of transportation to work
+B08105A,means of transportation to work (white alone)
+B08105B,means of transportation (black alone)
+B08105C,means of transportation (american indian alaskan alone)
+B08105D,means of transportation (asian alone)
+B08105E,means of transportation (native hawaiian pacific alone)
+B08105F,means of transportation (some other alone)
+B17001,poverty sex by age
+B17001A,poverty sex by age (white alone)
+B17001B,poverty sex by age (black alone)
+B17001C,poverty sex by age (american indian alaskan alone)
+B17001D,poverty sex by age (asian alone)
+B17001E,poverty sex by age (native hawaiian pacific alone)
+B17001F,poverty sex by age (some other alone)
+B17020,poverty age
+B17020A,poverty age (white alone)
+B17020B,poverty age (black alone)
+B17020C,poverty age (american indian alaskan alone)
+B17020D,poverty age (asian alone)
+B17020E,poverty age (native hawaiian pacific alone)
+B17020F,poverty age (some other alone)
+B18101,age by disability
+B18101A,age by disability (white alone)
+B18101B,age by disability (black alone)
+B18101C,age by disability (american indian alaskan alone)
+B18101D,age by disability (asian alone)
+B18101E,age by disability (native hawaiian pacific alone)
+B18101F,age by disability (some other alone)
+B20005,sex by work experience
+B20005A,sex by work experience (white alone)
+B20005B,sex by work experience (black alone)
+B20005C,sex by work experience (american indian alaskan alone)
+B20005D,sex by work experience (asian alone)
+B20005E,sex by work experience (native hawaiian pacific alone)
+B20005F,sex by work experience (some other alone)
