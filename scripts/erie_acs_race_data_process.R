@@ -1,4 +1,4 @@
-#==== Buffalo - ACS Race Data Processing Script====#
+#==== Erie County - ACS Race Data Processing Script====#
 
 # Library Load-in====
 library(tidyverse) #For everything data#
@@ -74,36 +74,36 @@ acs_variables <- bind_rows(acsvariables_list) %>%
 # Pulling all place data for New York====
 # Filtering for Buffalo
 # Only pulling variables we need
-ALL_NY_place_race <- map(years, ~ get_acs(geography = "place",
-                                         state = "NY",
-                                         year = .x,
-                                         survey = "acs1",
-                                         variables = c("total" = acs_variables$name[1],
-                                                       "white" = acs_variables$name[2],
-                                                       "black" = acs_variables$name[3],
-                                                       "american_indian_alaskan_native" = acs_variables$name[4],
-                                                       "asian" = acs_variables$name[5],
-                                                       "native_hawaiian_pacific_islander" = acs_variables$name[6],
-                                                       "some_other_race" = acs_variables$name[7],
-                                                       "two_or_more_races" = acs_variables$name[8],
-                                                       "two_races_w_some_other" = acs_variables$name[9],
-                                                       "two_race_no_other_three_more" = acs_variables$name[10]),
-                                         cache_table = TRUE) %>%
-                           filter(str_detect(NAME, regex("Buffalo City", ignore_case = TRUE))) %>%
+ALL_erie_race <- map(years, ~ get_acs(geography = "county",
+                                          state = "NY",
+                                          county = "Erie",
+                                          year = .x,
+                                          survey = "acs1",
+                                          variables = c("total" = acs_variables$name[1],
+                                                        "white" = acs_variables$name[2],
+                                                        "black" = acs_variables$name[3],
+                                                        "american_indian_alaskan_native" = acs_variables$name[4],
+                                                        "asian" = acs_variables$name[5],
+                                                        "native_hawaiian_pacific_islander" = acs_variables$name[6],
+                                                        "some_other_race" = acs_variables$name[7],
+                                                        "two_or_more_races" = acs_variables$name[8],
+                                                        "two_races_w_some_other" = acs_variables$name[9],
+                                                        "two_race_no_other_three_more" = acs_variables$name[10]),
+                                          cache_table = TRUE) %>%
                            select(c(variable, estimate, moe)) %>%
                            rename("race" = "variable")) 
 
 # Affixing names==
-names(ALL_NY_place_race) <- years
+names(ALL_erie_race) <- years
 
 # Collapsing all buffalo results into a single data frame====
-buffalo_acs_race_10_19 <- bind_rows(ALL_NY_place_race, .id = "year")
+erie_acs_race_10_19 <- bind_rows(ALL_erie_race, .id = "year")
 
 # Saving the data to the directory====
-write_csv(buffalo_acs_race_10_19, "data/acs/race/Buffalo ACS Race Data - 2010-2019.csv")
+write_csv(erie_acs_race_10_19, "data/acs/race/Erie ACS Race Data - 2010-2019.csv")
 
 # Pulling in a custom function to place data into a bucket and up to the cloud===
 cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
 
 # Uploading the ACS Race data for Buffalo====
-cloud_saver("Buffalo ACS Race Data 2010 to 2019", buffalo_acs_race_10_19)
+cloud_saver("Erie ACS Race Data 2010 to 2019", erie_acs_race_10_19)

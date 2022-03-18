@@ -1,4 +1,4 @@
-#==== Buffalo - ACS Race Data Processing Script====#
+#==== Buffalo Census Tracts - ACS Race Data Processing Script====#
 
 # Library Load-in====
 library(tidyverse) #For everything data#
@@ -74,21 +74,26 @@ acs_variables <- bind_rows(acsvariables_list) %>%
 # Pulling all place data for New York====
 # Filtering for Buffalo
 # Only pulling variables we need
-ALL_NY_place_race <- map(years, ~ get_acs(geography = "place",
-                                         state = "NY",
-                                         year = .x,
-                                         survey = "acs1",
-                                         variables = c("total" = acs_variables$name[1],
-                                                       "white" = acs_variables$name[2],
-                                                       "black" = acs_variables$name[3],
-                                                       "american_indian_alaskan_native" = acs_variables$name[4],
-                                                       "asian" = acs_variables$name[5],
-                                                       "native_hawaiian_pacific_islander" = acs_variables$name[6],
-                                                       "some_other_race" = acs_variables$name[7],
-                                                       "two_or_more_races" = acs_variables$name[8],
-                                                       "two_races_w_some_other" = acs_variables$name[9],
-                                                       "two_race_no_other_three_more" = acs_variables$name[10]),
-                                         cache_table = TRUE) %>%
+
+#census tracts are only available in 5 year increments. Need to manually pull the tracts for Buffalo, NY with the report added in the documentation folder #
+
+
+ALL_NY_place_race <- get_acs(geography = "tract",
+                                          state = "NY",
+                                          county = "Erie",
+                                          year = 2020,
+                                          survey = "acs5",
+                                          variables = c("total" = acs_variables$name[1],
+                                                        "white" = acs_variables$name[2],
+                                                        "black" = acs_variables$name[3],
+                                                        "american_indian_alaskan_native" = acs_variables$name[4],
+                                                        "asian" = acs_variables$name[5],
+                                                        "native_hawaiian_pacific_islander" = acs_variables$name[6],
+                                                        "some_other_race" = acs_variables$name[7],
+                                                        "two_or_more_races" = acs_variables$name[8],
+                                                        "two_races_w_some_other" = acs_variables$name[9],
+                                                        "two_race_no_other_three_more" = acs_variables$name[10]),
+                                          cache_table = TRUE) %>%
                            filter(str_detect(NAME, regex("Buffalo City", ignore_case = TRUE))) %>%
                            select(c(variable, estimate, moe)) %>%
                            rename("race" = "variable")) 
