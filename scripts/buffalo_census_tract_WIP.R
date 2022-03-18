@@ -16,9 +16,6 @@ acs_codes <- read_csv("scripts/utilities/acs_codes.csv")
 # Pulling the "Race" variable helper==
 race_code <- acs_codes$code[which(acs_codes$category == "race")]
 
-# Setting the desired years====
-years <- 2010:2019
-
 # Pulling matching variable names from acs database for all year 2010-2019. Storing in a list==
 acsvariables_list <- map(years, ~load_variables(.x, "acs1", cache = TRUE) %>%
                            filter(str_detect(name, race_code)))
