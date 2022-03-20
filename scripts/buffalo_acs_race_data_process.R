@@ -39,7 +39,7 @@ if (acs_var_cols + acs_var_rows != 2) {
   stop("The amount of columns and rows in the ACS dataset don't match. Please check the column and row counts in the window that just opened and address the discrepancy.")}
 
 # Adding a catch for if the variable names aren't as expected====
-expected_vars <- `names<-`(readRDS("scripts/utilities/acs_vars_expected.RDS"), NULL)
+expected_vars <- `names<-`(readRDS("scripts/utilities/acs_race_vars_expected.RDS"), NULL)
 
 # Grabbing the unique columns names
 unique_vars <- bind_rows(acsvariables_list) %>%
