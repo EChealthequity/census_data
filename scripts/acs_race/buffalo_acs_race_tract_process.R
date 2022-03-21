@@ -74,7 +74,6 @@ acs_variables <- bind_rows(acsvariables_list) %>%
 # Pulling all place data for New York====
 # Filtering for Buffalo Census Tracts
 # Only pulling variables we need
-
 buffalo_tracts_acs_race_16_20 <- get_acs(geography = "tract",
                                           state = "NY",
                                           county = "Erie",
@@ -90,7 +89,8 @@ buffalo_tracts_acs_race_16_20 <- get_acs(geography = "tract",
                                                         "two_or_more_races" = acs_variables$name[8],
                                                         "two_races_w_some_other" = acs_variables$name[9],
                                                         "two_race_no_other_three_more" = acs_variables$name[10]),
-                                          cache_table = TRUE) %>%
+                                          cache_table = TRUE,
+                                         geometry = TRUE) %>%
                            mutate(NAME = str_remove_all(NAME, "[:alpha:]"),
                                   NAME = str_trim(NAME),
                                   NAME = str_remove_all(NAME, ","),
@@ -99,6 +99,13 @@ buffalo_tracts_acs_race_16_20 <- get_acs(geography = "tract",
                            rename("race" = "variable",
                                   "tract" = "NAME")
 
+# Loading in pre-set buffalo tracts designations
+buffalo_tracts <- read_csv("scripts/utilities/buffalo_tracts.csv",
+                           col_types = cols(tract = col_character()))
+
+# Filtering out all Erie County tracts for just Buffalo tracts
+buffalo_tracts_acs_race_16_20  <- buffalo_tracts_acs_race_16_20  %>%
+  filter(tract %in% buffalo_tracts$tract)
 
 
 # Saving the data to the directory====
@@ -109,10 +116,4 @@ cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
 
 # Uploading the ACS Race data for Buffalo====
 cloud_saver("Buffalo Tracts ACS Race Data 2016 to 2020", buffalo_tracts_acs_race_16_20)
-
-#loading in buffalo tracts for filtering===
-
-buffalo_tracts <- read_csv("scripts/utilities/buffalo_tracts.csv", 
-                           col_types = cols(tract = col_character()))
-
 
