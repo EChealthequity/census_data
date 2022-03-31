@@ -1,4 +1,4 @@
-#==== Buffalo Census Tracts - ACS Employment Status Data Processing Script====#
+#==== Buffalo Zipcode - ACS Poverty Data Processing Script====#
 
 # Library Load-in====
 library(tidyverse) #For everything data#
@@ -14,14 +14,14 @@ census_api_key(api_key)
 acs_codes <- read_csv("scripts/utilities/acs_codes.csv")
 
 # Pulling the "Race" variable helper==
-employment_code <- acs_codes$code[which(acs_codes$category == "employment status")]
+poverty_code <- acs_codes$code[which(acs_codes$category == "poverty 12 months")]
 
-#tracts are only available in 5 year increments. Set the "start" year===
+#tracts are only available in 5 year increments. So mirroring for the Zip Codes. Set the "start" year===
 year <- 2016
 
 # Pulling matching variable names from acs database for all year 2016-2020. Storing in a list==
 acsvariables_list <- map(year, ~load_variables(.x, "acs5/subject", cache = TRUE) %>%
-                           filter(str_detect(name, employment_code)))
+                           filter(str_detect(name, poverty_code)))
 
 # Counting the number of columns in each table, returning the unique values==
 acs_col_count <- unique(sapply(acsvariables_list, function(df) length(df)))
@@ -39,7 +39,7 @@ if (acs_var_cols + acs_var_rows != 2) {
   stop("The amount of columns and rows in the ACS dataset don't match. Please check the column and row counts in the window that just opened and address the discrepancy.")}
 
 # Adding a catch for if the variable names aren't as expected====
-expected_vars <- `names<-`(readRDS("scripts/utilities/acs_employment_vars_expected.RDS"), NULL)
+expected_vars <- `names<-`(readRDS("scripts/utilities/acs_poverty_vars_expected.RDS"), NULL)
 
 # Grabbing the unique columns names
 unique_vars <- bind_rows(acsvariables_list) %>%
@@ -69,43 +69,34 @@ acs_variables <- bind_rows(acsvariables_list) %>%
   select(name,label) %>%
   mutate(label = if_else(label == "Estimate!!Total", str_remove(label, "Estimate!!"), str_remove(label, "Estimate!!Total")),
          label = str_remove_all(label, "!!"),
-         label = str_replace_all(label, "Estimate", " ")) %>%
-  filter(label == "Unemployment rate Population 20 to 64 years")
+         label = str_replace_all(label, "Estimate", " "))
+
+# Loading in pre-set buffalo zip codes designations
+buffalo_zips <- read_csv("scripts/utilities/buffalo_zips.csv")
+
 
 # Pulling all place data for New York====
 # Filtering for Buffalo Census Tracts
 # Only pulling variables we need
-buffalo_tracts_acs_unemployment_16_20 <- get_acs(geography = "tract",
-                                         state = "NY",
-                                         county = "Erie",
-                                         year = 2020,
-                                         survey = "acs5",
-                                         variables = c("total_unemployment_rate" = acs_variables$name[1],
-                                                       cache_table = TRUE,
-                                         geometry = TRUE)) %>%
+zip_tracts_acs_poverty_16_20 <- get_acs(geography = "zcta",
+                                             zcta = buffalo_zips$zip_code,
+                                             year = 2020,
+                                             survey = "acs5",
+                                             variables = c("total_poverty" = acs_variables$name[1]),
+                                             cache_table = TRUE) %>%
   mutate(NAME = str_remove_all(NAME, "[:alpha:]"),
          NAME = str_trim(NAME),
-         NAME = str_remove_all(NAME, ","),
+         NAME = str_remove_all(NAME, "^5"),
          NAME = str_trim(NAME)) %>%
   select(c(NAME, variable, estimate, moe)) %>%
-  rename("total_unemployment_rate" = "variable",
-         "tract" = "NAME")
-
-# Loading in pre-set buffalo tracts designations
-buffalo_tracts <- read_csv("scripts/utilities/buffalo_tracts.csv",
-                           col_types = cols(tract = col_character()))
-
-# Filtering out all Erie County tracts for just Buffalo tracts
-buffalo_tracts_acs_unemployment_16_20  <- buffalo_tracts_acs_unemployment_16_20   %>%
-  filter(tract %in% buffalo_tracts$tract)
-
+  rename("total_w_poverty_status" = "variable",
+         "zip_code" = "NAME")
 
 # Saving the data to the directory====
-write_csv(buffalo_tracts_acs_unemployment_16_20, "data/acs/employment/Buffalo Tracts ACS Unemployment Data - 2016-2020.csv")
+write_csv(zip_tracts_acs_poverty_16_20, "data/acs/poverty/Buffalo Zips ACS Poverty Data - 2016-2020.csv")
 
 # Pulling in a custom function to place data into a bucket and up to the cloud===
 cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
 
 # Uploading the ACS Race data for Buffalo====
-cloud_saver("Buffalo Tracts ACS Unemployment Rate Data 2016 to 2020", buffalo_tracts_acs_unemployment_16_20)
-
+cloud_saver("Buffalo Zip ACS Poverty Data 2016 to 2020", zip_tracts_acs_poverty_16_20)

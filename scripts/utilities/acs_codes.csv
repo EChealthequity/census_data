@@ -15,6 +15,7 @@ B08105C,means of transportation (american indian alaskan alone)
 B08105D,means of transportation (asian alone)
 B08105E,means of transportation (native hawaiian pacific alone)
 B08105F,means of transportation (some other alone)
+S1701,poverty 12 months
 B17001,poverty sex by age
 B17001A,poverty sex by age (white alone)
 B17001B,poverty sex by age (black alone)
@@ -44,3 +45,4 @@ B20005D,sex by work experience (asian alone)
 B20005E,sex by work experience (native hawaiian pacific alone)
 B20005F,sex by work experience (some other alone)
 B01003,total population
+S0101,age and sex
