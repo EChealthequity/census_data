@@ -92,11 +92,13 @@ buffalo_tracts_acs_poverty_16_20 <- get_acs(geography = "tract",
 
 # Loading in pre-set buffalo tracts designations
 buffalo_tracts <- read_csv("scripts/utilities/buffalo_tracts.csv",
-                           col_types = cols(tract = col_character()))
+                           col_types = cols(tract = col_character())) %>%
+  mutate(tract = if_else(tract == "1.1","1.10",tract))
 
 # Filtering out all Erie County tracts for just Buffalo tracts
 buffalo_tracts_acs_poverty_16_20  <- buffalo_tracts_acs_poverty_16_20   %>%
-  filter(tract %in% buffalo_tracts$tract)
+  filter(tract %in% buffalo_tracts$tract) %>%
+  mutate(tract = as.character(tract))
 
 
 # Saving the data to the directory====
