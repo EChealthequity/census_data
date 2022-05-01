@@ -78,10 +78,10 @@ acs_variables <- bind_rows(acsvariables_list) %>%
 # Filtering for Buffalo Census Tracts
 # Only pulling variables we need
 buffalo_tracts_acs_poverty_15_19 <- get_acs(geography = "tract",
-                                                 state = "NY",
-                                                 county = "Erie",
-                                                 year = year,
-                                                 survey = "acs5",
+                                            state = "NY",
+                                            county = "Erie",
+                                            year = year,
+                                            survey = "acs5/s",
                                                  variables = c("total_poverty" = acs_variables$name[1],
                                                                cache_table = TRUE,
                                                                geometry = TRUE)) %>%

@@ -3,7 +3,8 @@
 # Library Load-in====
 library(tidyverse) #For everything data#
 library(here) #For easier movement through the directory#
-library(tidycensus) #For grabbing census/acs data#
+library(tidycensus) #For grabbing census/acs data
+library(sf) #For converting dataframes into shapefiles#
 
 # Setting the API key====
 api_key <- readRDS("scripts/utilities/census_api_key.RDS")
@@ -17,7 +18,7 @@ acs_codes <- read_csv("scripts/utilities/acs_codes.csv")
 total_code <- acs_codes$code[which(acs_codes$category == "total population")]
 
 #tracts are only available in 5 year increments. Set the "start" year===
-year <- 2016
+year <- 2015
 
 # Pulling matching variable names from acs database for all year 2016-2020. Storing in a list==
 acsvariables_list <- map(year, ~load_variables(.x, "acs5", cache = TRUE) %>%
@@ -74,10 +75,10 @@ acs_variables <- bind_rows(acsvariables_list) %>%
 # Pulling all place data for New York====
 # Filtering for Buffalo Census Tracts
 # Only pulling variables we need
-buffalo_tracts_acs_total_16_20 <- get_acs(geography = "tract",
+buffalo_tracts_acs_total_15_19 <- get_acs(geography = "tract",
                                          state = "NY",
                                          county = "Erie",
-                                         year = 2020,
+                                         year = year,
                                          survey = "acs5",
                                          variables = c("total" = acs_variables$name[1],
                                                        cache_table = TRUE,
@@ -96,17 +97,20 @@ buffalo_tracts <- read_csv("scripts/utilities/buffalo_tracts.csv",
   mutate(tract = if_else(tract == "1.1","1.10",tract))
 
 # Filtering out all Erie County tracts for just Buffalo tracts
-buffalo_tracts_acs_total_16_20  <- buffalo_tracts_acs_total_16_20  %>%
+buffalo_tracts_acs_total_15_19  <- buffalo_tracts_acs_total_15_19  %>%
   filter(tract %in% buffalo_tracts$tract) %>%
   mutate(tract = as.character(tract))
 
 
 # Saving the data to the directory====
-write_csv(buffalo_tracts_acs_total_16_20, "data/acs/population/Buffalo Tracts ACS Total Population Data - 2016-2020.csv")
+write_csv(buffalo_tracts_acs_total_15_19, "data/acs/population/Buffalo Tracts ACS Total Population Data - 2016-2020.csv")
+
+# Writing out the geometry files for use in Tableau Public==
+st_write(buffalo_tracts_acs_total_15_19, "data/acs/population/Buffalo Tracts ACS Population Data - 2015-2019.shp")
 
 # Pulling in a custom function to place data into a bucket and up to the cloud===
 cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
 
 # Uploading the ACS Race data for Buffalo====
-cloud_saver("Buffalo Tracts ACS Total Population Data 2016 to 2020", buffalo_tracts_acs_total_16_20)
+cloud_saver("Buffalo Tracts ACS Total Population Data 2015 to 2019", buffalo_tracts_acs_total_15_19)
 
