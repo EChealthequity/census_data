@@ -92,7 +92,7 @@ buffalo_tracts_acs_disability_15_19 <- get_acs(geography = "tract",
          NAME = str_remove_all(NAME, ","),
          NAME = str_trim(NAME)) %>%
   select(c(NAME, variable, estimate, moe)) %>%
-  rename("trans_totals" = "variable",
+  rename("diasbility_totals" = "variable",
          "tract" = "NAME") 
 
 
