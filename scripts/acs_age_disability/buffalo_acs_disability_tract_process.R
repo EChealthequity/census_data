@@ -18,7 +18,7 @@ acs_codes <- read_csv("scripts/utilities/acs_codes.csv")
 disability_code <- acs_codes$code[which(acs_codes$category == "age by disability")]
 
 #tracts are only available in 5 year increments. Set the "start" year===
-year <- 2016
+year <- 2015
 
 # Pulling matching variable names from acs database for all year 2016-2020. Storing in a list==
 acsvariables_list <- map(year, ~load_variables(.x, "acs5", cache = TRUE) %>%
@@ -79,10 +79,10 @@ acs_vars <-`names<-`(acs_variables$name, acs_variables$label)
 # Pulling all place data for New York====
 # Filtering for Buffalo Census Tracts
 # Only pulling variables we need
-buffalo_tracts_acs_disability_16_20 <- get_acs(geography = "tract",
+buffalo_tracts_acs_disability_15_19 <- get_acs(geography = "tract",
                                           state = "NY",
                                           county = "Erie",
-                                          year = 2020,
+                                          year = 2019,
                                           survey = "acs5",
                                           variables = acs_vars,
                                           cache_table = TRUE,
@@ -102,19 +102,19 @@ buffalo_tracts <- read_csv("scripts/utilities/buffalo_tracts.csv",
   mutate(tract = if_else(tract == "1.1","1.10",tract))
 
 # Filtering out all Erie County tracts for just Buffalo tracts
-buffalo_tracts_acs_disability_16_20  <- buffalo_tracts_acs_disability_16_20   %>%
+buffalo_tracts_acs_disability_15_19  <- buffalo_tracts_acs_disability_15_19   %>%
   filter(tract %in% buffalo_tracts$tract) %>%
   mutate(tract = as.character(tract))
 
 
 # Saving the data to the directory====
-write_csv(buffalo_tracts_acs_disability_16_20, "data/acs/disability/Buffalo Tracts ACS Disability")
+write_csv(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability")
 
 # Writing out the geometry files for use in Tableau Public==
-st_write(buffalo_tracts_acs_disability_16_20, "data/acs/disability/Buffalo Tracts ACS Disability 2016 - 2020.shp")
+st_write(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability 2016 - 2020.shp")
 
 # Pulling in a custom function to place data into a bucket and up to the cloud===
 cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
 
 # Uploading the ACS Race data for Buffalo====
-cloud_saver("Buffalo Tracts ACS Disability Data 2016 to 2020", buffalo_tracts_acs_disability_16_20)
+cloud_saver("Buffalo Tracts ACS Disability Data 2016 to 2020", buffalo_tracts_acs_disability_15_19)
