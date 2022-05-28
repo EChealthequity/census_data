@@ -166,7 +166,7 @@ buffalo_tracts_acs_trans_16_20  <- buffalo_tracts_acs_trans_16_20   %>%
 
 
 # Saving the data to the directory====
-write_csv(buffalo_tracts_acs_trans_16_20, "data/acs/poverty/Buffalo Tracts ACS Transportation to Work Data - 2016-2020.csv")
+write_csv(buffalo_tracts_acs_trans_16_20, "data/acs/transportation/Buffalo Tracts ACS Transportation to Work Data - 2016-2020.csv")
 
 # Pulling in a custom function to place data into a bucket and up to the cloud===
 cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
