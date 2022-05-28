@@ -111,10 +111,10 @@ buffalo_tracts_acs_disability_15_19  <- buffalo_tracts_acs_disability_15_19   %>
 write_csv(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability")
 
 # Writing out the geometry files for use in Tableau Public==
-st_write(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability 2016 - 2020.shp")
+st_write(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability 2015 - 2019.shp")
 
 # Pulling in a custom function to place data into a bucket and up to the cloud===
 cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
 
 # Uploading the ACS Race data for Buffalo====
-cloud_saver("Buffalo Tracts ACS Disability Data 2016 to 2020", buffalo_tracts_acs_disability_15_19)
+cloud_saver("Buffalo Tracts ACS Disability Data 2015 to 2019", buffalo_tracts_acs_disability_15_19)
