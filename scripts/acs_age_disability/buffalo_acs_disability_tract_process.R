@@ -4,6 +4,7 @@
 library(tidyverse) #For everything data#
 library(here) #For easier movement through the directory#
 library(tidycensus) #For grabbing census/acs data#
+library(sf) #For converting dataframes into shapefiles#
 
 # Setting the API key====
 api_key <- readRDS("scripts/utilities/census_api_key.RDS")
@@ -108,6 +109,9 @@ buffalo_tracts_acs_disability_16_20  <- buffalo_tracts_acs_disability_16_20   %>
 
 # Saving the data to the directory====
 write_csv(buffalo_tracts_acs_disability_16_20, "data/acs/disability/Buffalo Tracts ACS Disability")
+
+# Writing out the geometry files for use in Tableau Public==
+st_write(buffalo_tracts_acs_disability_16_20, "data/acs/disability/Buffalo Tracts ACS Disability 2016 - 2020.shp")
 
 # Pulling in a custom function to place data into a bucket and up to the cloud===
 cloud_saver <- readRDS("../cloud_setup/utilities/cloud_saver.rds")
