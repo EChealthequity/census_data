@@ -6,6 +6,7 @@ library(here) #For easier movement through the directory#
 library(tidycensus) #For grabbing census/acs data#
 library(sf) #For converting dataframes into shapefiles#
 
+
 # Setting the API key====
 api_key <- readRDS("scripts/utilities/census_api_key.RDS")
 census_api_key(api_key)
