@@ -108,7 +108,7 @@ buffalo_tracts_acs_disability_15_19  <- buffalo_tracts_acs_disability_15_19   %>
 
 
 # Saving the data to the directory====
-write_csv(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability")
+write_csv(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability.csv")
 
 # Writing out the geometry files for use in Tableau Public==
 st_write(buffalo_tracts_acs_disability_15_19, "data/acs/disability/Buffalo Tracts ACS Disability 2015 - 2019.shp")
